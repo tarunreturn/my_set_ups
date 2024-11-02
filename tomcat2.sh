@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Install Java 17
+# Install Java 
 yum install java-17 -y
 
 # Fetch the latest version number for Tomcat 9
