@@ -35,7 +35,7 @@ TOMCAT_DIR="apache-tomcat-${TOMCAT_VERSION}"
 echo "Configuring Tomcat user roles..."
 sed -i '56  a\<role rolename="manager-gui"/>' "${TOMCAT_DIR}/conf/tomcat-users.xml"
 sed -i '57  a\<role rolename="manager-script"/>' "${TOMCAT_DIR}/conf/tomcat-users.xml"
-sed -i '58  a\<user username="tomcat" password="Tarun@123" roles="manager-gui,manager-script"/>' "${TOMCAT_DIR}/conf/tomcat-users.xml"
+sed -i '58  a\<user username="tomcat" password="tarun123" roles="manager-gui,manager-script"/>' "${TOMCAT_DIR}/conf/tomcat-users.xml"
 sed -i '59  a\</tomcat-users>' "${TOMCAT_DIR}/conf/tomcat-users.xml"
 sed -i '56d' "${TOMCAT_DIR}/conf/tomcat-users.xml"  # Remove the previous closing tag if exists
 
