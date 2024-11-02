@@ -1,69 +1,30 @@
----
-- name: Install and configure Apache Tomcat
-  hosts: all
-  become: yes
+- hosts: all
   tasks:
-    - name: Install Java
-      yum:
-        name: java-17
-        state: present
-
-    - name: Fetch the latest version number for Tomcat 9
-      shell: |
-        curl -s https://dlcdn.apache.org/tomcat/tomcat-9/ | grep -oP '(?<=v)[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -1
-      register: tomcat_version
-
-    - name: Check if TOMCAT_VERSION is empty
-      fail:
-        msg: "Error: Unable to fetch the latest Tomcat version."
-      when: tomcat_version.stdout == ""
-
-    - name: Construct the download URL
-      set_fact:
-        tomcat_url: "https://dlcdn.apache.org/tomcat/tomcat-9/v{{ tomcat_version.stdout }}/bin/apache-tomcat-{{ tomcat_version.stdout }}.tar.gz"
-
-    - name: Download the latest version of Tomcat
+    - name: download tomcat from dlcdn
       get_url:
-        url: "{{ tomcat_url }}"
-        dest: "/tmp/apache-tomcat-{{ tomcat_version.stdout }}.tar.gz"
+        url: "https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.87/bin/apache-tomcat-9.0.87.tar.gz"
+        dest: "/root/"
 
-    - name: Extract Tomcat
-      unarchive:
-        src: "/tmp/apache-tomcat-{{ tomcat_version.stdout }}.tar.gz"
-        dest: "/opt/"
-        remote_src: yes
+    - name: untar the apache file
+      command: tar -zxvf apache-tomcat-9.0.87.tar.gz
 
-    - name: Configure tomcat-users.xml
-      lineinfile:
-        path: "/opt/apache-tomcat-{{ tomcat_version.stdout }}/conf/tomcat-users.xml"
-        line: "{{ item }}"
-        insertafter: "<tomcat-users>"
-      loop:
-        - '<role rolename="manager-gui"/>'
-        - '<role rolename="manager-script"/>'
-        - '<user username="tomcat" password="tarun123" roles="manager-gui,manager-script"/>'
 
-    - name: Remove default context.xml entries for manager app
-      lineinfile:
-        path: "/opt/apache-tomcat-{{ tomcat_version.stdout }}/webapps/manager/META-INF/context.xml"
-        state: absent
-        line: "{{ item }}"
-      loop:
-        - '    <Context>'
-        - '        <WatchedResource>WEB-INF/web.xml</WatchedResource>'
-      
-    - name: Start Tomcat
-      shell: "/opt/apache-tomcat-{{ tomcat_version.stdout }}/bin/startup.sh"
-      async: 10
-      poll: 0
+    - name: rename the tomcat
+      command: mv apache-tomcat-9.0.87 tomcat
+      tags: abc
 
-    - name: Wait for Tomcat to start
-      wait_for:
-        port: 8080
-        delay: 10
-        timeout: 60
-      when: ansible_os_family == "RedHat"
+    - name: install java
+      command: yum install java-1.8.0-openjdk -y
 
-    - name: Display Tomcat start message
-      debug:
-        msg: "Tomcat {{ tomcat_version.stdout }} has been started successfully."
+    - name: setting the roles in tomcat-user.xml file
+      template:
+        src: tomcat-users.xml
+        dest: /root/tomcat/conf/tomcat-users.xml
+
+    - name: delete two lines in context.xml
+      template:
+        src: context.xml
+        dest: /root/tomcat/webapps/manager/META-INF/context.xml
+
+    - name: start the tomcat
+      shell: nohup /root/tomcat/bin/startup.sh
