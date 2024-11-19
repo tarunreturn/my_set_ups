@@ -1,4 +1,4 @@
-#run this commands mannual if run on linux u can ingnore it if use unbuntu
+#run this commands mannual if run on linux 
 #vim .bashrc
 #export PATH=$PATH:/usr/local/bin/
 #source .bashrc
