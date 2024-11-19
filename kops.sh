@@ -1,11 +1,13 @@
+#vim .bashrc
+#export PATH=$PATH:/usr/local/bin/
+#source .bashrc
 #!/bin/bash
-
 # Prompt user for input
 read -p "Enter your AWS region (eg:us-east-1): " REGION
 read -p "Enter your S3 bucket name (e.g., mys3.k8s.local): " S3_BUCKET_NAME
 read -p "Enter your cluster name (e.g., mycluster.k8s.local): " CLUSTER_NAME
 
-# AWS Configuration
+# AWS Configuration or if u use IAM role ingnore it
 aws configure
 
 # Download kubectl and kops
