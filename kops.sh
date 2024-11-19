@@ -5,6 +5,7 @@
 
 #!/bin/bash
 # Prompt user for S3 bucket name and cluster name
+#aws configure or  IAM ROLE required
 read -p "Enter the S3 bucket name: " S3_BUCKET_NAME
 read -p "Enter the cluster name: " CLUSTER_NAME
 
