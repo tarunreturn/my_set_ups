@@ -1,3 +1,4 @@
+#! /bin/bash
 #use global tools config in jenkins for maven to avoid java releted problems
 #STEP-1:installing git 
 yum install git -y
